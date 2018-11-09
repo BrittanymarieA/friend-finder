@@ -1,0 +1,10 @@
+
+.form-control {
+    max-width: 200px;
+    width: 100%;
+}
+
+#name, #photo {
+    max-width: 300px;
+    width: 100%;
+}
