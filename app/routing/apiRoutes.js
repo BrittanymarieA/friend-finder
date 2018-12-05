@@ -1,50 +1,46 @@
-var express = require("express");
-var bodyParser = require("body-parser");
-var path = require("path");
-var app = express();
+var friends = require("./../data/friends")
 
 //puling data from file
- module.exports = function apiRoutes(){
+module.exports = function (app) {
 
- //get request   
-  app.get("/api/friends", function(req, res) {
-    res.json(newFriends);
+  //get request   
+  app.get("/api/friends", function (req, res) {
+    res.json(friends);
   });
 
- //posting to body 
-  app.post("/api/friends", function(req, res) {
+  //posting to body 
+  app.post("/api/friends", function (req, res) {
     console.log(req.body.scores);
 
-
-    var user = req.body;
-
-    // looping throuhg scores of survey
-    for(var i = 0; i < user.scores.length; i++) {
-      user.scores[i] = parseInt(user.scores[i]);
+    var bestMatch = {
+      name: "",
+      photo: "",
+      friendDiffernce: 1000
     }
 
-    
-    var bestFriend = 0;
-    var minimumDifference = 40;
+    var userData = req.body;
+    var userScores = userData.scores;
+    var totalDifference = 0;
 
-//looping through freinds array
-    for(var i = 0; i < newFriends.length; i++) {
-      var totalDifference = 0;
-      for(var j = 0; j < newFriends[i].scores.length; j++) {
-        var difference = Math.abs(user.scores[j] - newFriends[i].scores[j]);
-        totalDifference += difference;
-      }
+    for (var i = 0; i < friends.length; i++) {
+      totalDifference = 0;
 
-      if(totalDifference < minimumDifference) {
-        bestFriend = i;
-        minimumDifference = totalDifference;
+      for(var j = 0; j < friends[i].scores[j]; j++){
+        totalDifference += Math.abs(parseInt(userScores[j] - parseInt(friends[i].scores[j])));
+
+        if (totalDifference <= bestMatch.friendDiffernce){
+          bestMatch.name = friends[i].name;
+          bestMatch.photo = friends[i].photo;
+          bestMatch.friendDiffernce = totalDifference;
+        }
       }
     }
 
-//pushing to body
-    newFriends.push(user);
 
-    res.json(newFriends[bestFriend]);
+    //pushing to body
+    friends.push(userData);
+
+    res.json(bestMatch);
   });
 };
 
