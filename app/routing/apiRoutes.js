@@ -20,19 +20,24 @@ module.exports = function (app) {
 
     var userData = req.body;
     var userScores = userData.scores;
-    var totalDifference = 0;
+    var totalDifference;
 
     for (var i = 0; i < friends.length; i++) {
-      totalDifference = 0;
+     var currendFriend = friends[i]; 
+     totalDifference = 0;
 
-      for(var j = 0; j < friends[i].scores[j]; j++){
-        totalDifference += Math.abs(parseInt(userScores[j] - parseInt(friends[i].scores[j])));
+      for (var j = 0; j < friends[i].scores[j]; j++) {
+        var currendFriendScore = currendFriend.scores[j];
+        var currentUserScore = userScores[j];
 
-        if (totalDifference <= bestMatch.friendDiffernce){
-          bestMatch.name = friends[i].name;
-          bestMatch.photo = friends[i].photo;
-          bestMatch.friendDiffernce = totalDifference;
-        }
+        totalDifference += Math.abs(parseInt(currentUserScore) - parseInt(currendFriendScore));
+      }
+
+      if (totalDifference <= bestMatch.friendDiffernce) {
+        bestMatch.name = friends[i].name;
+        bestMatch.photo = friends[i].photo;
+        bestMatch.friendDiffernce = totalDifference;
+
       }
     }
 
